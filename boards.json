@@ -1,7 +1,7 @@
 {
   "packages": [
     {
-      "name": "Unofficial",
+      "name": "Heltec (unofficial)",
       "maintainer": "Rop",
       "websiteURL": "https://github.com/ropg/board_definitions",
       "email": "rop@gonggri.jp",
@@ -10,34 +10,18 @@
       },
       "platforms": [
         {
-          "name": "Unofficial",
+          "name": "Heltec (unofficial)",
           "architecture": "esp32",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "category": "ESP32",
-          "url": "https://github.com/ropg/board_definitions/archive/refs/tags/0.0.1.zip",
-          "archiveFileName": "board_definitions-0.0.1.zip",
-          "checksum": "SHA-256:104252415861d841da8e4f449e517df284c7ff6aebe073781a8f658c3584ec3c",
-          "size": "252704964",
+          "url": "https://github.com/ropg/board_definitions/archive/refs/tags/0.0.2.zip",
+          "archiveFileName": "board_definitions-0.0.2.zip",
+          "checksum": "SHA-256:031a1f46e23ebfa202d3138f22e244e3aad45df9881def79a43ef01269bcb045",
+          "size": "252819383",
           "help": {
             "online": ""
           },
-          "boards": [
-            {
-              "name": "ESP32 Dev Board"
-            },
-            {
-              "name": "ESP32-S2 Dev Board"
-            },
-            {
-              "name": "ESP32-S3 Dev Board"
-            },
-            {
-              "name": "ESP32-C3 Dev Board"
-            },
-            {
-              "name": "Arduino Nano ESP32"
-            }
-          ],
+          "boards": [],
           "toolsDependencies": [
             {
               "packager": "esp32",
