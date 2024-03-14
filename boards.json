@@ -14,10 +14,10 @@
           "architecture": "esp32",
           "version": "0.0.1",
           "category": "ESP32",
-          "url": ".zip",
-          "archiveFileName": ".zip",
-          "checksum": "SHA-256:",
-          "size": "",
+          "url": "https://github.com/ropg/board_definitions/archive/refs/tags/0.0.1.zip",
+          "archiveFileName": "board_definitions-0.0.1.zip",
+          "checksum": "SHA-256:104252415861d841da8e4f449e517df284c7ff6aebe073781a8f658c3584ec3c",
+          "size": "252704964",
           "help": {
             "online": ""
           },
