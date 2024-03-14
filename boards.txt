@@ -21,9 +21,7 @@ menu.PinNumbers=Pin Numbering
 
 # Custom options
 
-
-
-heltec_esp32_lora_v3.name=Heltec ESP32 LoRa v3 a.k.a. HTIT-WB32LA a.k.a. "the regular board"
+heltec_esp32_lora_v3.name=Heltec ESP32 LoRa v3
 heltec_esp32_lora_v3.vid.0=0x303a
 heltec_esp32_lora_v3.pid.0=0x1001
 
@@ -128,8 +126,7 @@ heltec_esp32_lora_v3.menu.EraseFlash.all.upload.erase_cmd=-e
 
 
 
-heltec_wireless_stick_v3.name=Heltec Wireless Stick v3 a.k.a. HTIT-WS_v3 a.k.a. "the stick"
-heltec_wireless_stick_v3.vid.0=0x10c4
+heltec_wireless_stick_v3.name=Heltec Wireless Stick v3
 heltec_wireless_stick_v3.pid.0=0xea60
 
 heltec_wireless_stick_v3.bootloader.tool=esptool_py
