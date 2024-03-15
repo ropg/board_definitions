@@ -1,0 +1,67 @@
+name: Update boards.json on Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-boards-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Get release information
+        id: release_info
+        run: |
+          import requests
+          import hashlib
+
+          release_data = requests.get('${{ github.event.release.url }}', headers={'Accept': 'application/vnd.github.v3+json'}).json()
+          tag_name = release_data['tag_name']
+          assets = release_data['assets']
+          source_zip = [asset for asset in assets if asset['name'].endswith('.zip') and asset['content_type'] == 'application/zip']
+
+          if not source_zip:
+            raise Exception("Source code zip not found.")
+
+          source_zip = source_zip[0]
+          asset_url = source_zip['browser_download_url']
+          asset_size = source_zip['size']
+
+          response = requests.get(asset_url)
+          sha256_hash = hashlib.sha256(response.content).hexdigest()
+
+          print(f"::set-output name=tag::{tag_name}")
+          print(f"::set-output name=hash::{sha256_hash}")
+          print(f"::set-output name=filesize::{asset_size}")
+
+      - name: Update boards.json
+        run: |
+          with open('boards.json.editme', 'r') as file:
+            content = file.read()
+
+          content = content.replace("{tag}", '${{ steps.release_info.outputs.tag }}')
+          content = content.replace("{hash}", '${{ steps.release_info.outputs.hash }}')
+          content = content.replace("{filesize}", str(${{ steps.release_info.outputs.filesize }}))
+
+          with open('boards.json', 'w') as file:
+            file.write(content)
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add boards.json
+          git commit -m "Update boards.json with release details"
+          git push
