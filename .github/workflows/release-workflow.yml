@@ -22,29 +22,22 @@ jobs:
           pip install requests
 
       - name: Get release information
-        id: release_info
         run: |
-          import requests
-          import hashlib
-
-          release_data = requests.get('${{ github.event.release.url }}', headers={'Accept': 'application/vnd.github.v3+json'}).json()
-          tag_name = release_data['tag_name']
-          assets = release_data['assets']
-          source_zip = [asset for asset in assets if asset['name'].endswith('.zip') and asset['content_type'] == 'application/zip']
-
-          if not source_zip:
-            raise Exception("Source code zip not found.")
-
-          source_zip = source_zip[0]
-          asset_url = source_zip['browser_download_url']
-          asset_size = source_zip['size']
-
-          response = requests.get(asset_url)
-          sha256_hash = hashlib.sha256(response.content).hexdigest()
-
-          print(f"::set-output name=tag::{tag_name}")
-          print(f"::set-output name=hash::{sha256_hash}")
-          print(f"::set-output name=filesize::{asset_size}")
+          python -c "import requests; import hashlib; \
+          release_data = requests.get('${{ github.event.release.url }}', headers={'Accept': 'application/vnd.github.v3+json'}).json(); \
+          tag_name = release_data['tag_name']; \
+          assets = release_data['assets']; \
+          source_zip = [asset for asset in assets if asset['name'].endswith('.zip') and asset['content_type'] == 'application/zip']; \
+          if not source_zip: \
+            raise Exception('Source code zip not found.'); \
+          source_zip = source_zip[0]; \
+          asset_url = source_zip['browser_download_url']; \
+          asset_size = source_zip['size']; \
+          response = requests.get(asset_url); \
+          sha256_hash = hashlib.sha256(response.content).hexdigest(); \
+          print(f'::set-output name=tag::{tag_name}'); \
+          print(f'::set-output name=hash::{sha256_hash}'); \
+          print(f'::set-output name=filesize::{asset_size}');"
 
       - name: Update boards.json
         run: |
