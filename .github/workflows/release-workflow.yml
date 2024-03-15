@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: main  # Ensure you're on the main branch (or your default branch)
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -23,6 +25,7 @@ jobs:
 
       - name: Run update_boards.py script
         run: python update_boards.py
+        # Ensure update_boards.py does not add .zip files to the repo
 
       - name: Configure Git
         run: |
