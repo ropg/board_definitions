@@ -1,42 +1,41 @@
 import requests
-import hashlib
 import time
+import os
 
-# Set maximum number of retries and delay between retries
-max_retries = 5
-retry_delay = 60  # in seconds
+# Initialization
+max_retries = 3
+retry_delay = 30  # seconds
+release_data = None
 
+# Define the base URL pattern for direct download
+base_url = "https://github.com/ropg/board_definitions/archive/refs/tags/{tag}.zip"
+
+# Retry fetching the release data to get the tag name
 for attempt in range(max_retries):
-    # Fetch release data from GitHub API
-    response = requests.get('https://api.github.com/repos/ropg/board_definitions/releases/146843375', headers={'Accept': 'application/vnd.github.v3+json'})
-    release_data = response.json()
-    assets = release_data.get('assets', [])
+    response = requests.get('https://api.github.com/repos/ropg/board_definitions/releases/146843375')
+    if response.ok:
+        release_data = response.json()
+        break
+    else:
+        print(f"Attempt {attempt + 1}: Failed to fetch release data, retrying in {retry_delay} seconds...")
+        time.sleep(retry_delay)
 
-    # Log the assets for debugging
-    print(f"Attempt {attempt + 1}: Found assets: {assets}")
+if not release_data:
+    raise Exception("Failed to fetch release data after {} retries.".format(max_retries))
 
-    # Try to find the zip file in the assets
-    source_zip = next((asset for asset in assets if asset['name'].endswith('.zip') and asset['content_type'] == 'application/zip'), None)
+tag_name = release_data['tag_name']
 
-    if source_zip:
-        break  # Exit loop if zip file is found
-    time.sleep(retry_delay)  # Wait before the next attempt
+# Construct the download URL
+download_url = base_url.format(tag=tag_name)
 
-# Raise an exception if the zip file was not found after all retries
-if not source_zip:
-    raise Exception(f'Source code zip not found after {max_retries} retries.')
+# Download the zip file
+print(f"Downloading {download_url}...")
+response = requests.get(download_url)
 
-# Proceed with downloading the zip file and updating the hash and size in boards.json
-asset_url = source_zip['browser_download_url']
-asset_size = source_zip['size']
-response = requests.get(asset_url)
-sha256_hash = hashlib.sha256(response.content).hexdigest()
+# Save the file in the same directory as the script
+filename = f"{tag_name}.zip"
 
-# Update boards.json.editme with the new values
-with open('boards.json.editme', 'r') as file:
-    content = file.read()
+with open(filename, 'wb') as f:
+    f.write(response.content)
 
-content = content.replace('{tag}', release_data['tag_name']).replace('{hash}', sha256_hash).replace('{filesize}', str(asset_size))
-
-with open('boards.json', 'w') as file:
-    file.write(content)
+print(f"Downloaded {filename}")
