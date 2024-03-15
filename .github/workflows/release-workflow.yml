@@ -24,7 +24,7 @@ jobs:
       - name: Get release information and update boards.json
         run: |
           python -c "import requests, hashlib; \
-          release_data = requests.get('${{ github.event.release.url }}', headers={'Accept': 'application/vnd.github.v3+json'}).json(); \
+          release_data = requests.get('https://api.github.com/repos/ropg/board_definitions/releases/146841975', headers={'Accept': 'application/vnd.github.v3+json'}).json(); \
           tag_name = release_data['tag_name']; \
           assets = release_data['assets']; \
           source_zip = [asset for asset in assets if asset['name'].endswith('.zip') and asset['content_type'] == 'application/zip']; \
@@ -39,7 +39,7 @@ jobs:
             content = file.read(); \
           content = content.replace('{tag}', tag_name).replace('{hash}', sha256_hash).replace('{filesize}', str(asset_size)); \
           with open('boards.json', 'w') as file: \
-            file.write(content)"
+            file.write(content);" 
 
       - name: Commit and push changes
         run: |
