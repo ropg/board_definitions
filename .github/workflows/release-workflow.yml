@@ -21,9 +21,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Get release information
+      - name: Get release information and update boards.json
         run: |
-          python -c "import requests; import hashlib; \
+          python -c "import requests, hashlib; \
           release_data = requests.get('${{ github.event.release.url }}', headers={'Accept': 'application/vnd.github.v3+json'}).json(); \
           tag_name = release_data['tag_name']; \
           assets = release_data['assets']; \
@@ -35,21 +35,11 @@ jobs:
           asset_size = source_zip['size']; \
           response = requests.get(asset_url); \
           sha256_hash = hashlib.sha256(response.content).hexdigest(); \
-          print(f'::set-output name=tag::{tag_name}'); \
-          print(f'::set-output name=hash::{sha256_hash}'); \
-          print(f'::set-output name=filesize::{asset_size}');"
-
-      - name: Update boards.json
-        run: |
-          with open('boards.json.editme', 'r') as file:
-            content = file.read()
-
-          content = content.replace("{tag}", '${{ steps.release_info.outputs.tag }}')
-          content = content.replace("{hash}", '${{ steps.release_info.outputs.hash }}')
-          content = content.replace("{filesize}", str(${{ steps.release_info.outputs.filesize }}))
-
-          with open('boards.json', 'w') as file:
-            file.write(content)
+          with open('boards.json.editme', 'r') as file: \
+            content = file.read(); \
+          content = content.replace('{tag}', tag_name).replace('{hash}', sha256_hash).replace('{filesize}', str(asset_size)); \
+          with open('boards.json', 'w') as file: \
+            file.write(content)"
 
       - name: Commit and push changes
         run: |
