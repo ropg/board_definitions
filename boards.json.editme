@@ -3,10 +3,10 @@
     {
       "name": "Heltec (unofficial)",
       "maintainer": "Rop",
-      "websiteURL": "https://github.com/ropg/board_definitions",
+      "websiteURL": "https://github.com/ropg/{repo}",
       "email": "rop@gonggri.jp",
       "help": {
-        "online": "https://github.com/ropg/board_definitions"
+        "online": "https://github.com/ropg/{repo}"
       },
       "platforms": [
         {
@@ -14,8 +14,8 @@
           "architecture": "esp32",
           "version": "{tag}",
           "category": "ESP32",
-          "url": "https://github.com/ropg/board_definitions/archive/refs/tags/{tag}.zip",
-          "archiveFileName": "board_definitions-{tag}.zip",
+          "url": "https://github.com/ropg/{repo}/archive/refs/tags/{tag}.zip",
+          "archiveFileName": "{repo}-{tag}.zip",
           "checksum": "SHA-256:{hash}",
           "size": "{filesize}",
           "help": {

@@ -2,13 +2,15 @@ import requests
 import hashlib
 import os
 
+repo = "board_definitions"
+
 # Fetch release data to get the tag name
-response = requests.get('https://api.github.com/repos/ropg/board_definitions/releases/latest')
+response = requests.get(f"https://api.github.com/repos/ropg/{repo}/releases/latest")
 release_data = response.json()
 tag_name = release_data['tag_name']
 
 # Define the download URL using the tag name
-download_url = f"https://github.com/ropg/board_definitions/archive/refs/tags/{tag_name}.zip"
+download_url = f"https://github.com/ropg/{repo}/archive/refs/tags/{tag_name}.zip"
 
 # Download the zip file
 print(f"Downloading {download_url}...")
@@ -32,7 +34,11 @@ with open('boards.json.editme', 'r') as file:
     content = file.read()
 
 # Replace placeholders or update the content as needed
-content = content.replace('{filesize}', str(file_size)).replace('{hash}', sha256_hash.hexdigest()).replace('{tag}', tag_name)
+content = content\
+    .replace('{repo}', repo)\
+    .replace('{filesize}', str(file_size))\
+    .replace('{hash}', sha256_hash.hexdigest())\
+    .replace('{tag}', tag_name)
 
 with open('boards.json', 'w') as file:
     file.write(content)
