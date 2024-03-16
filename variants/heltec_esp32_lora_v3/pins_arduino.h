@@ -83,6 +83,8 @@ static const uint8_t SDA_OLED = 17;
 
 static const uint8_t RST_LoRa = 12;
 static const uint8_t BUSY_LoRa = 13;
+// It's not actually DIO0 on SX1262!! (leaving for compatibility)
 static const uint8_t DIO0 = 14;
+static const uint8_t DIO1 = 14;
 
 #endif /* Pins_Arduino_h */
